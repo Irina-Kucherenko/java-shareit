@@ -17,7 +17,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
-    static final String USER_NOT_FOUND = "User not found";
+    private static final String USER_NOT_FOUND = "User not found";
 
     private boolean checkEmail(String email) {
         return getAllUsers().stream().anyMatch(user -> user.getEmail().equals(email));
@@ -42,22 +42,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto updateUser(Long userId, UserDto userDto) {
-        if (checkUser(userId)) {
-            User user = UserMapper.transformToUser(userDto);
-            User updatedUser = userRepository.getUserById(userId);
-            if (user.getEmail() != null) {
-                if (checkEmail(user.getEmail())) {
-                    throw new EmailExistException("Email already exist");
-                }
-                updatedUser.setEmail(user.getEmail());
-            }
-            if (user.getName() != null) {
-                updatedUser.setName(user.getName());
-            }
-            userRepository.updateUser(updatedUser);
-            return UserMapper.transformToUserDto(updatedUser);
+        if (!checkUser(userId)) {
+            throw new ResourceNotFoundException(USER_NOT_FOUND);
         }
-        throw new ResourceNotFoundException(USER_NOT_FOUND);
+        User user = UserMapper.transformToUser(userDto);
+        User updatedUser = userRepository.getUserById(userId);
+        if (user.getEmail() != null) {
+            if (checkEmail(user.getEmail())) {
+                throw new EmailExistException("Email already exist");
+            }
+            updatedUser.setEmail(user.getEmail());
+        }
+        if (user.getName() != null) {
+            updatedUser.setName(user.getName());
+        }
+        userRepository.updateUser(updatedUser);
+        return UserMapper.transformToUserDto(updatedUser);
     }
 
     @Override
