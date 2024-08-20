@@ -5,6 +5,9 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.practicum.shareit.booking.dto.BookingDto;
+import ru.practicum.shareit.item.comment.dto.CommentDto;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -21,4 +24,10 @@ public class ItemDto {
 
     @NotNull(message = "The availability status is missing")
     private Boolean available;
+
+    private BookingDto lastBooking;
+
+    private BookingDto nextBooking;
+
+    private List<CommentDto> comments;
 }
