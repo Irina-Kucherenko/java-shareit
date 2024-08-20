@@ -89,7 +89,7 @@ public class BookingServiceImpl implements BookingService {
             case FUTURE -> bookingRepository.getAheadBookingsByOwnerId(ownerId);
             case WAITING -> bookingRepository.getBookingsByOwnerIdAndStatus(ownerId, BookingStatus.WAITING);
             case REJECTED -> bookingRepository.getBookingsByOwnerIdAndStatus(ownerId, BookingStatus.REJECTED);
-            default ->  bookingRepository.getAllByItemOwnerId(ownerId);
+            default -> bookingRepository.getAllByItemOwnerId(ownerId);
         };
         return bookings.stream().map(BookingMapper::transformToDto).toList();
 

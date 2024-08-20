@@ -21,7 +21,7 @@ public class BookingMapper {
     }
 
     public static Booking transformToBookingFromBookingRequestDto(BookingRequestDto bookingRequestDto, Item item,
-                                                               User booker, BookingStatus status) {
+                                                                  User booker, BookingStatus status) {
         Booking booking = new Booking();
         booking.setId(bookingRequestDto.getItemId());
         booking.setStart(bookingRequestDto.getStart());

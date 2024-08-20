@@ -79,8 +79,8 @@ public class ItemServiceImpl implements ItemService {
         if (checkItem(itemId)) {
             Item item = itemRepository.getReferenceById(itemId);
             ItemDto itemDto = ItemMapper.transformToDto(item);
-            itemDto.setComments(commentRepository.findAllByItemId(itemId).
-                    stream().map(CommentMapper::transformToDto).toList());
+            itemDto.setComments(commentRepository.findAllByItemId(itemId)
+                    .stream().map(CommentMapper::transformToDto).toList());
             return itemDto;
         }
         throw new ResourceNotFoundException("Item not found");
