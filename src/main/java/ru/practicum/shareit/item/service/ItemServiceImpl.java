@@ -36,6 +36,8 @@ public class ItemServiceImpl implements ItemService {
 
     private final BookingRepository bookingRepository;
 
+    private static final String USER_NOT_FOUND_MESSAGE = "User not found";
+
     @Override
     public boolean checkItem(Long itemId) {
         return itemRepository.existsById(itemId);
@@ -71,7 +73,7 @@ public class ItemServiceImpl implements ItemService {
             return ItemMapper.transformToDto(updatedItem);
 
         }
-        throw new ResourceNotFoundException("User not found");
+        throw new ResourceNotFoundException(USER_NOT_FOUND_MESSAGE);
     }
 
     @Override
@@ -92,7 +94,7 @@ public class ItemServiceImpl implements ItemService {
             List<Item> items = itemRepository.findItemsByOwnerId(userId);
             return items.stream().map(ItemMapper::transformToDto).toList();
         }
-        throw new ResourceNotFoundException("User not found");
+        throw new ResourceNotFoundException(USER_NOT_FOUND_MESSAGE);
     }
 
     @Override
@@ -114,7 +116,7 @@ public class ItemServiceImpl implements ItemService {
             throw new ResourceNotFoundException("Item with id " + itemId + " not found");
         }
         if (!(userService.checkUser(userId))) {
-            throw new ResourceNotFoundException("User not found");
+            throw new ResourceNotFoundException(USER_NOT_FOUND_MESSAGE);
         }
         Optional<Booking> bookingOptional = bookingRepository.findFirstByBookerIdAndEndBeforeAndStatusNot(userId,
                 LocalDateTime.now(), BookingStatus.REJECTED);

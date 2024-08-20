@@ -2,6 +2,7 @@ package ru.practicum.shareit.booking.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingRequestDto;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
@@ -9,7 +10,7 @@ import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingState;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.repository.BookingRepository;
-import ru.practicum.shareit.exception.ItemNotAvailable;
+import ru.practicum.shareit.exception.InvalidBookingException;
 import ru.practicum.shareit.exception.NotOwnerException;
 import ru.practicum.shareit.exception.ResourceNotFoundException;
 import ru.practicum.shareit.item.mapper.ItemMapper;
@@ -39,10 +40,14 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional
     public BookingDto addBooking(BookingRequestDto bookingRequestDto, Long bookerId) {
+        if (!userService.checkUser(bookerId)) {
+            throw new InvalidBookingException(USER_NOT_FOUND);
+        }
         Item item = ItemMapper.transformToItem(itemService.getItemById((bookingRequestDto.getItemId())));
         if (!(item.getAvailable())) {
-            throw new ItemNotAvailable("Item is not available");
+            throw new InvalidBookingException("Item is not available");
         }
         User booker = UserMapper.transformToUser(userService.getUserById(bookerId));
         Booking booking = BookingMapper.transformToBookingFromBookingRequestDto(bookingRequestDto,
@@ -54,7 +59,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public BookingDto approveBooking(Long userId, Long bookingId, boolean approved) {
         if (!(checkBooking(bookingId))) {
-            throw new ResourceNotFoundException("Booking not found");
+            throw new InvalidBookingException("Booking not found");
         }
         Booking booking = bookingRepository.getReferenceById(bookingId);
         if (!(userId.equals(booking.getItem().getOwner().getId()))) {
