@@ -26,13 +26,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BookingServiceImpl implements BookingService {
 
+    private static final String USER_NOT_FOUND = "User not found";
+
     private final BookingRepository bookingRepository;
 
     private final UserService userService;
 
     private final ItemService itemService;
-
-    private static final String USER_NOT_FOUND = "User not found";
 
     @Override
     public boolean checkBooking(Long bookingId) {
@@ -57,6 +57,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional
     public BookingDto approveBooking(Long userId, Long bookingId, boolean approved) {
         if (!(checkBooking(bookingId))) {
             throw new InvalidBookingException("Booking not found");
@@ -72,8 +73,9 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public BookingDto getParticularBookingOfUser(Long userId, Long bookingId) {
-        if (!(userService.checkUser(userId))) {
+        if (!userService.checkUser(userId)) {
             throw new ResourceNotFoundException(USER_NOT_FOUND);
         }
         if (!(checkBooking(bookingId))) {
@@ -84,6 +86,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<BookingDto> getItemBookingsByOwner(Long ownerId, BookingState bookingState) {
         if (!(userService.checkUser(ownerId))) {
             throw new ResourceNotFoundException(USER_NOT_FOUND);
@@ -101,6 +104,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<BookingDto> getBookingsByUser(Long bookerId, BookingState bookingState) {
         if (!(userService.checkUser(bookerId))) {
             throw new ResourceNotFoundException(USER_NOT_FOUND);

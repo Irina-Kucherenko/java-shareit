@@ -28,6 +28,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
 
+    private static final String USER_NOT_FOUND_MESSAGE = "User not found";
+
     private final ItemRepository itemRepository;
 
     private final UserService userService;
@@ -35,8 +37,6 @@ public class ItemServiceImpl implements ItemService {
     private final CommentRepository commentRepository;
 
     private final BookingRepository bookingRepository;
-
-    private static final String USER_NOT_FOUND_MESSAGE = "User not found";
 
     @Override
     public boolean checkItem(Long itemId) {

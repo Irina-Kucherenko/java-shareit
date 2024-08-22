@@ -15,9 +15,9 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
-
     private static final String USER_NOT_FOUND = "User not found";
+
+    private final UserRepository userRepository;
 
     private boolean checkEmail(String email) {
         return getAllUsers().stream().anyMatch(user -> user.getEmail().equals(email));

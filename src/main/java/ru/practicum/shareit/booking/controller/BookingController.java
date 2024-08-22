@@ -24,18 +24,21 @@ public class BookingController {
     @PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     public BookingDto addBooking(@RequestHeader(name = "X-Sharer-User-Id") Long bookerId,
                                  @RequestBody @Valid BookingRequestDto bookingDtoRequest) {
+        log.info("Creating new booking for booker id {}", bookerId);
         return bookingService.addBooking(bookingDtoRequest, bookerId);
     }
 
     @PatchMapping(value = "/{bookingId}")
     public BookingDto approveBooking(@RequestHeader(name = "X-Sharer-User-Id") Long ownerId,
                                      @PathVariable Long bookingId, @RequestParam boolean approved) {
+        log.info("Updating approval for booking id {}", bookingId);
         return bookingService.approveBooking(ownerId, bookingId, approved);
     }
 
     @GetMapping(value = "/{bookingId}", produces = APPLICATION_JSON_VALUE)
     public BookingDto getParticularBookingOfUser(@RequestHeader(name = "X-Sharer-User-Id") Long bookerId,
                                                  @PathVariable Long bookingId) {
+        log.info("Getting particular booking of user id {}", bookerId);
         return bookingService.getParticularBookingOfUser(bookerId, bookingId);
     }
 
@@ -43,6 +46,7 @@ public class BookingController {
     public List<BookingDto> getItemBookingsByOwner(@RequestHeader(name = "X-Sharer-User-Id") Long ownerId,
                                                    @RequestParam(name = "state", defaultValue = "ALL")
                                                    BookingState state) {
+        log.info("Getting bookings by items of owner id {}", ownerId);
         return bookingService.getItemBookingsByOwner(ownerId, state);
     }
 
@@ -50,6 +54,7 @@ public class BookingController {
     public List<BookingDto> getAllUserBookings(@RequestHeader(name = "X-Sharer-User-Id") Long bookerId,
                                                @RequestParam(name = "state", defaultValue = "ALL")
                                                BookingState state) {
+        log.info("Getting bookings by user id {}", bookerId);
         return bookingService.getBookingsByUser(bookerId, state);
     }
 }
