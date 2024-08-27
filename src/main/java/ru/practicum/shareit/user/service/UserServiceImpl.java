@@ -15,9 +15,9 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
-
     private static final String USER_NOT_FOUND = "User not found";
+
+    private final UserRepository userRepository;
 
     private boolean checkEmail(String email) {
         return getAllUsers().stream().anyMatch(user -> user.getEmail().equals(email));
@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> getAllUsers() {
-        return userRepository.getAllUsers().stream()
+        return userRepository.findAll().stream()
                 .map(UserMapper::transformToUserDto)
                 .toList();
     }
@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService {
         if (checkEmail(user.getEmail())) {
             throw new EmailExistException("Email already exist");
         }
-        userRepository.createUser(user);
+        userRepository.save(user);
         return UserMapper.transformToUserDto(user);
     }
 
@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
             throw new ResourceNotFoundException(USER_NOT_FOUND);
         }
         User user = UserMapper.transformToUser(userDto);
-        User updatedUser = userRepository.getUserById(userId);
+        User updatedUser = userRepository.getReferenceById(userId);
         if (user.getEmail() != null) {
             if (checkEmail(user.getEmail())) {
                 throw new EmailExistException("Email already exist");
@@ -56,14 +56,14 @@ public class UserServiceImpl implements UserService {
         if (user.getName() != null) {
             updatedUser.setName(user.getName());
         }
-        userRepository.updateUser(updatedUser);
+        userRepository.save(updatedUser);
         return UserMapper.transformToUserDto(updatedUser);
     }
 
     @Override
     public UserDto getUserById(Long userId) {
         if (checkUser(userId)) {
-            User user = userRepository.getUserById(userId);
+            User user = userRepository.getReferenceById(userId);
             return UserMapper.transformToUserDto(user);
         }
         throw new ResourceNotFoundException(USER_NOT_FOUND);
@@ -74,11 +74,11 @@ public class UserServiceImpl implements UserService {
         if (!checkUser(userId)) {
             throw new ResourceNotFoundException(USER_NOT_FOUND);
         }
-        userRepository.deleteUser(userId);
+        userRepository.deleteById(userId);
     }
 
     @Override
     public boolean checkUser(Long userId) {
-        return userRepository.getUserById(userId) != null;
+        return userRepository.existsById(userId);
     }
 }
