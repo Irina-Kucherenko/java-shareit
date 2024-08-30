@@ -8,10 +8,10 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<groupId>ru.practicum.gateway</groupId>
-	<artifactId>shareIt-gateway</artifactId>
+	<artifactId>gateway</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>shareIt-gateway</name>
-	<description>shareIt-gateway</description>
+	<name>gateway</name>
+	<description>gateway</description>
 	<url/>
 	<licenses>
 		<license/>

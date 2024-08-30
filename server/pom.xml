@@ -8,10 +8,10 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <groupId>ru.practicum.server</groupId>
-    <artifactId>shareIt-server</artifactId>
+    <artifactId>server</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>shareIt-server</name>
-    <description>shareIt-server</description>
+    <name>server</name>
+    <description>server</description>
     <url/>
     <licenses>
         <license/>
